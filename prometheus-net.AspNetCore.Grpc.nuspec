@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata minClientVersion="2.8">
+    <id>prometheus-net.AspNetCore.Grpc</id>
+    <version>4.1.1</version>
+    <authors>sandersaares</authors>
+    <owners>sandersaares</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <icon>images/prometheus-net-logo.png</icon>
+    <projectUrl>https://github.com/prometheus-net/prometheus-net</projectUrl>
+    <description>ASP.NET Core gRPC integration with Prometheus</description>
+    <releaseNotes>* 4.1.1
+- Bugfix: HTTP request metrics in 4.1.0 got broken due to typo in middleware helper.
+* 4.1.0
+- Fixed HttpClient metrics duration that was incorrectly measured. #265
+- prometheus-net.NetFramework.AspNet is now strong named, just like all the other assemblies. #273
+- NetFx target is now conditional for Windows builds only, to allow easier development work on nonwindows platforms. #264
+- MetricPusher now supports a callback for logging push errors. #186
+- Added support for defining static labels on registry or metric level. #256
+- Added ICollectorRegistry and IMetricFactory for mocking in test code. #268
+- Ignore /metrics URL by default in HTTP request metrics.
+- Fix overflow in Summary after observing more than uint.MaxValue events. #277
+- Reduce allocations in hot paths. #276, #275
+- Added request filtering (authorization) support to standalone MetricServer. #261
+* 4.0.0
+- Allow arbitrary ASP.NET Core route parameters to be exposed as HTTP metric labels. #225
+- Breaking change: some HTTP metrics implementation classes were changed from public to internal. They were never supposed to be public and hopefully nobody ever used them directly. Public documented API did not change.
+- Add HttpClient metrics with IHttpClientFactory integration.
+* 3.6.0
+- Added ASP.NET Core health check publisher for publishing metrics on health check status. #203 #209
+- Fixed hang in ASP.NET Web API exporter. #215
+- Fixed ASP.NET Web API exporter exporting metrics from the wrong registry. #217
+- Reduced memory use in MetricPusher implementation. Inspired by #208
+- Added basic gRPC service metrics support. #212
+- Reduce pointless log spam on cancelled scrapes - will silently ignore cancelled scrapes in the ASP.NET Core exporter. #220
+* 3.5.0
+- Exposed metric.Unpublish() method since there was already a matching Publish() there.
+- When the scrape is aborted, stop collecting/serializing metrics. #189
+- Added simple metric export handler for legacy ASP.NET Web API, to avoid having to deal with HttpListener complexity.
+* 3.4.0
+- Separate packaging for ASP.NET Core 3 to reduce package reference management complexity for users. #164
+- Lazy-initialize the default sample metrics to reduce initialization cost for those who do not need them. #170
+- ASP.NET Core middlware no longer disposes of output stream. #171
+- Fix DotNetStats occasional data tearing under parallel collections. #173
+- Improved wording of some error messages. #169
+- Added Counter.IncTo(), Gauge.IncTo(), Gauge.DecTo(). #181
+- Added Gauge.Set(DateTimeOffset) and Gauge.IncTo(DateTimeOffset). #181
+- Improve .NET Framework 4.6.1 packaging to include the ValueTuple reference automatically. #179
+- ASP.NET Core HTTP metrics now capture route data before it is overwritten by an exception handler. #177
+- ASP.NET Core HTTP "in progress" metrics now include controller/action labels (ASP.NET Core 3 only).
+- Fixed concurrently defect in HTTP metrics that may have caused label values from wrong request to apply. #182
+- The HttpListener based MetricServer can now handle more than one concurrent request.
+- Added asynchronous "before collect" callbacks, giving user code more flexibility in metric updates.
+- Added .Remove() to labeled metric instances for more convenient removal API (previously had to call method on parent instance).
+- Added .Unpublish() to labeled metric instances to support temporary unpublishing of a metric, without discarding collected data (e.g. histogram buckets), during periods of data unavailability.
+* 3.3.0
+- Add ability to filter requests by port number when exporting metrics. #160
+* 3.2.1
+- Fix NuGet packaging defect that caused reference failures after installing .2.0 on .NET Core 2.1 or newer. #158
+* 3.2.0
+- Enable custom HTTP client to be used in MetricPusher, allowing for Basic auth and more flexibility. #125
+- Add DiagnosticSourceAdapter (.NET Core only). #153
+- Improved compatibility with older .NET Framework versions. #155
+* 3.1.4
+- Fix timezone mismatch in Summary that led to unintended delays in buffer flushing. #149
+* 3.1.3
+- Fix regression introduced in 3.1.0 where MetricPusher does not always flush metrics before stopping.
+* 3.1.2
+- Fix defect where Histogram batch observations only incremented sum by one value, instead of entire batch. #147
+* 3.1.1
+- Added missing UTF-8 charset to Content-Type header, so non-ASCII characters are interpreted correctly by browsers.
+* 3.1.0
+- Added ICounter.NewTimer() (adds the value to the counter)
+- Eliminated some needless allocations when trying to register a metric that is already registered. #134
+- Added IHistogram.Count and IHistogram.Sum to expose aspects of collected data for inspection.
+- Added Collector.GetAllLabelValues() to expose the list of child metrics by all their known label values.
+- Metric export is now asynchronous internally to be compatible with ASP.NET Core 3.0 default configuration.
+- Added CollectorRegistry.CollectAndExportAsTextAsync() to support metric data export via arbitrary custom endpoints.
+* 3.0.3
+- Now backward compatible with ASP.NET Core 2.1 (was 2.2+)
+* 3.0.2
+- Fix defect where histogram sum failed to increment.
+* 3.0.1
+- Fix ObjectDisposedException in MetricPusher.
+* 3.0.0
+- Added HTTP request metrics for ASP.NET Core.
+- Somewhat more realistic examples in readme.
+- Metrics exporter is now significantly more CPU and memory-efficient.
+- Added Observe(value, count) to histogram metric, enabling multiple observations with the same value to be counted.
+- Added CountExceptions() and MeasureInProgress() helper extensions.
+- Adjusted API to better conform to Prometheus client library guidelines in terms of default values.
+- Breaking change: assemblies are now strong-named.
+- Breaking change: removed "windows" from built-in metric names as they are not Windows-specific.
+- Breaking change: removed support for protobuf export format (it is no longer used by Prometheus).
+- Breaking change: API surface cleaned up, removed some legacy methods, made many internal types actually internal.
+- Breaking change: "on demand collectors" concept replaced with simpler "before collect callbacks". Works the same, just less code needed to use it and fewer possible error conditions.
+- Breaking change: removed support for "custom collectors", as this was a very special use case that did not benefit at all from the main functionality of the library. Just generate a Prometheus exporter output document yourself if you need to export arbitrary data.
+* 2.1.3
+- Fixed wrong case used for metric type in the export data format. Should always be lowercase. #96
+* 2.1.2
+- Fixed potential conflict when using pushgateway and also other exporter libraries (see #89)
+* 2.1.1
+- Various minor fixes (see issues on GitHub for details).
+* 2.1.0
+- Add MetricOptions and subclasses for more extensible API (old API surface remains available)
+- Add SuppressInitialValue to metric configuration (ref https://www.robustperception.io/existential-issues-with-metrics/)
+- Add .WithLabels() as alternative to .Labels() for fewer annoying Intellisense conflicts.
+* 2.0.0
+- Targeting .NET Standard 2.0 as minimum version (.NET Framework 4.6.1, .NET Core 2.0 and Mono 5.4)
+- Added ASP.NET Core middlware
+- Added possibility to signal a failed scrape from on-demand collectors
+- Removed dependency on Reactive Extensions
+- Minor breaking changes to API
+- Performance improvements for hot-path code
+- Removed mostly obsolete PerfCounterCollector class
+- Fixed NuGet package contents to remove assemblies from dependencies
+- Various minor fixes (see issues on GitHub for details)
+* 1.3.4
+- Added support for .NET 4.5 using System.Reactive 3.1.1.
+- .NET 4.0 support continues to target Rx 2.5
+* 1.2.4:
+- Fixed MetricPusher not flushing metrics when stopped
+* 1.2.3:
+- Fixed label values escaping for ASCII formatter
+* 1.2.2:
+- PushGateway support
+- Various internal improvements (replaced locks with Interlocked operations)    
+* 1.1.4:
+- Fixed some metrics not updating, added process ID metric
+- Replaced lock statements in Counter and Gauge with CAS
+* 1.1.3:
+- optionally use https in MetricServer
+* 1.1.2:
+- using UTF-8 in text formatter
+- catching exceptions in MetricServer http loop
+* 1.1.1:
+- disposing of MetricServer loop on Stop()
+* 1.1.0:
+- Renamed some metric names to be in-line with prometheus guidelines (breaking change as far as the exported metrics are concerned)
+* 1.0.0:
+- Add CPU, num handles, start time, num threads metrics to dot net stats collector
+- Made DotNetStatsCollector default (previously it was PerfCounterCollector)
+* 0.0.11:
+- Summary metric ported from go
+* 0.0.10:
+- Fix header writing order
+* 0.0.9:
+- Generalise scraping so it can be called externally without using the embedded http handler
+* 0.0.8:
+- Introduced interfaces for all the metrics to make unlabelled collectors and their children polymorph
+* 0.0.7:
+- Added the notion of OnDemandCollectors + a DotNetStatsCollector to avoid having to use .net perf counters
+* 0.0.6:
+- Do not create unlabelled metric if label names are specified
+* 0.0.5:
+- Allow specifying hostname in URL
+- Fix null ref exception if 'Accept' header is not specified
+* 0.0.3 - initial version</releaseNotes>
+    <copyright>Copyright Â© prometheus-net developers</copyright>
+    <tags>metrics prometheus aspnetcore grpc</tags>
+    <dependencies>
+      <group targetFramework=".NETCoreApp3.1">
+        <dependency id="prometheus-net" version="4.1.1" />
+        <dependency id="Grpc.AspNetCore.Server" version="2.28.0" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

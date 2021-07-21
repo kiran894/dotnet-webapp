@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>OpenTelemetry.Exporter.Console</name>
+    </assembly>
+    <members>
+        <member name="P:OpenTelemetry.Exporter.ConsoleExporterOptions.Targets">
+            <summary>
+            Gets or sets the output targets for the console exporter.
+            </summary>
+        </member>
+        <member name="F:OpenTelemetry.Exporter.ConsoleExporterOutputTargets.Console">
+            <summary>
+            Output to the Console (stdout).
+            </summary>
+        </member>
+        <member name="F:OpenTelemetry.Exporter.ConsoleExporterOutputTargets.Debug">
+            <summary>
+            Output to the Debug trace.
+            </summary>
+        </member>
+        <member name="M:OpenTelemetry.Trace.ConsoleExporterHelperExtensions.AddConsoleExporter(OpenTelemetry.Trace.TracerProviderBuilder,System.Action{OpenTelemetry.Exporter.ConsoleExporterOptions})">
+            <summary>
+            Adds Console exporter to the TracerProvider.
+            </summary>
+            <param name="builder"><see cref="T:OpenTelemetry.Trace.TracerProviderBuilder"/> builder to use.</param>
+            <param name="configure">Exporter configuration options.</param>
+            <returns>The instance of <see cref="T:OpenTelemetry.Trace.TracerProviderBuilder"/> to chain the calls.</returns>
+        </member>
+    </members>
+</doc>
